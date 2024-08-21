@@ -9,7 +9,7 @@ const VideoSchema = new Schema({
     type: Buffer,
   },
   publishingYear: {
-    type: Number,
+    type: String,
   },
 });
 
