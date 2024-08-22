@@ -18,7 +18,7 @@ const all = async (req, res) => {
 
 const addVideo = async (req, res) => {
   try {
-    const { title, image, publishingDate } = req.body;
+    const { title, image, publishingYear } = req.body;
     const video = await Videos.findOne({ title });
     if (video) {
       return res.status(400).json({ msg: "Video already exist." });
@@ -27,7 +27,7 @@ const addVideo = async (req, res) => {
     const newVideo = new Videos({
       title: title,
       image: image,
-      publishingYear: publishingDate,
+      publishingYear: publishingYear,
     });
 
     newVideo
@@ -39,8 +39,28 @@ const addVideo = async (req, res) => {
         res.status(400).json({ msg: "The save failed!", error: error.message });
       });
   } catch (error) {
-    res.status(404).json({ msg: error.message, data: error });
+    res.status(500).json({ msg: error.message, data: error });
   }
 };
 
-module.exports = { all, addVideo };
+// @route   GET api/videos/video
+// @desc    EventsData
+// @access  Public
+
+const videoInfo = async (req, res) => {
+  try {
+    const { video_id } = req.params;
+    console.log(video_id);
+
+    const video = await Videos.findById(video_id);
+    if (video) {
+      return res.status(200).json({ msg: "Video found", data: video });
+    } else {
+      return res.status(404).json({ msg: "Video not found!", data: error });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: error.message, data: error });
+  }
+};
+
+module.exports = { all, addVideo, videoInfo };
