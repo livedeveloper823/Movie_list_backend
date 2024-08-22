@@ -1,7 +1,7 @@
 const Videos = require("../models/Video");
 
 // @route   GET api/videos/all
-// @desc    EventsData
+// @desc    VideoData
 // @access  Public
 const all = async (req, res) => {
   await Videos.find()
@@ -13,7 +13,7 @@ const all = async (req, res) => {
 };
 
 // @route   GET api/videos/add
-// @desc    EventsData
+// @desc    VideoData
 // @access  Public
 
 const addVideo = async (req, res) => {
@@ -44,7 +44,7 @@ const addVideo = async (req, res) => {
 };
 
 // @route   GET api/videos/video
-// @desc    EventsData
+// @desc    VideoData
 // @access  Public
 
 const videoInfo = async (req, res) => {
@@ -63,4 +63,27 @@ const videoInfo = async (req, res) => {
   }
 };
 
-module.exports = { all, addVideo, videoInfo };
+// @route   Put api/videos/video
+// @desc    VideoData
+// @access  Public
+
+const updateVideo = async (req, res) => {
+    try {
+      const { title, image, publishingYear } = req.body;
+      const { video_id } = req.params;
+      const video = await Videos.findById(video_id);
+      if (video) {
+        video.title = title;
+        video.image = image;
+        video.publishingYear = publishingYear;
+        await video.save();
+        res.status(200).json({ msg: "Updated successfully!", data: video });
+      } else {
+        res.status(404).json({ msg: "Video not found!", data: error });
+      }
+    } catch (error) {
+      res.status(500).json({ msg: error.message, data: error });
+    }
+  };
+
+module.exports = { all, addVideo, videoInfo, updateVideo };
